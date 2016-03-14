@@ -14,6 +14,7 @@ class CMockGenerator
     @plugins     = plugins
     @config      = config
     @prefix      = @config.mock_prefix
+    @suffix      = @config.mock_suffix
     @ordered     = @config.enforce_strict_ordering
     @framework   = @config.framework.to_s
 
@@ -39,7 +40,7 @@ class CMockGenerator
 
   def create_mock(module_name, parsed_stuff)
     @module_name = module_name
-    @mock_name   = @prefix + @module_name
+    @mock_name   = @prefix + @module_name + @suffix 
     @clean_mock_name = TypeSanitizer.sanitize_c_identifier(@mock_name)
     create_mock_subdir()
     create_mock_header_file(parsed_stuff)
