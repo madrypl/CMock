@@ -74,7 +74,7 @@ class CMockHeaderParser
 
     # remove preprocessor statements and extern "C"
     source.gsub!(/^\s*#.*/, '')
-    source.gsub!(/extern\s+\"C\"\s+\{/, '')
+    source.gsub!(/extern\s+\"C\"\s*\{/, '')
 
     # enums, unions, structs, and typedefs can all contain things (e.g. function pointers) that parse like function prototypes, so yank them
     # forward declared structs are removed before struct definitions so they don't mess up real thing later. we leave structs keywords in function prototypes
@@ -142,7 +142,7 @@ class CMockHeaderParser
       args << { :type   => (arg_type = arg_elements[0..-2].join(' ')),
                 :name   => arg_elements[-1],
                 :ptr?   => divine_ptr(arg_type),
-                :const? => arg_array.include?('const')
+                :const? => divine_const(arg)
               }
     end
     return args
@@ -151,6 +151,12 @@ class CMockHeaderParser
   def divine_ptr(arg_type)
     return false unless arg_type.include? '*'
     return false if arg_type.gsub(/(const|char|\*|\s)+/,'').empty?
+    return true
+  end
+
+  def divine_const(arg)
+    return false if /const[ *]/.match(arg).nil?                           # check for const
+    return false if /\*/.match(arg) and /const[^*]*\*/.match(arg).nil?    # check const comes before * indicating const data
     return true
   end
 
