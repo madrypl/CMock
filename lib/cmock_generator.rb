@@ -28,7 +28,12 @@ class CMockGenerator
     here = File.dirname __FILE__
     unity_path_in_ceedling = "#{here}/../../unity" # path to Unity from within Ceedling
     unity_path_in_cmock = "#{here}/../vendor/unity" # path to Unity from within CMock
-    if File.exist? unity_path_in_ceedling
+    # path to Unity as specified by env var
+    unity_path_in_env = ENV.has_key?("UNITY_DIR") ? File.expand_path(ENV.fetch("UNITY_DIR")) : nil
+
+    if unity_path_in_env and File.exist? unity_path_in_env
+      require "#{unity_path_in_env}/auto/type_sanitizer"
+    elsif File.exist? unity_path_in_ceedling
       require "#{unity_path_in_ceedling}/auto/type_sanitizer"
     elsif File.exist? unity_path_in_cmock
       require "#{unity_path_in_cmock}/auto/type_sanitizer"
@@ -95,7 +100,7 @@ class CMockGenerator
     file << plugin_includes if (!plugin_includes.empty?)
     file << "\n"
     file << "/* Ignore the following warnings, since we are copying code */\n"
-    file << "#if defined(__GNUC__) && !defined(__ICC)\n"
+    file << "#if defined(__GNUC__) && !defined(__ICC) && !defined(__TMS470__)\n"
     file << "#if !defined(__clang__)\n"
     file << "#pragma GCC diagnostic ignored \"-Wpragmas\"\n"
     file << "#endif\n"
