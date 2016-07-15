@@ -56,7 +56,7 @@ class CMockGeneratorPluginReturnThruPtr
     lines
   end
 
-  def mock_implementation(function)
+  def mock_implementation_precheck(function)
     lines = []
     function[:args].each do |arg|
       arg_name = arg[:name]
