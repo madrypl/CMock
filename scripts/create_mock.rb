@@ -11,7 +11,7 @@ if !mock_inc_c_pre_header.nil?
 end
 
 
-cmock = CMock.new(plugins: [:return_thru_ptr, :ignore ], 
+cmock = CMock.new(plugins: [:return_thru_ptr, :ignore, :ignore_arg ], 
                   mock_prefix: mock_prefix, 
                   mock_suffix: mock_suffix, 
                   mock_path: mock_out,
