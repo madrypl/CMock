@@ -23,7 +23,7 @@ class CMockPluginManager
         raise "ERROR: CMock unable to load plugin '#{plugin_name}'"
       end
     end
-#    @plugins.sort! {|a,b| a.priority <=> b.priority }
+    @plugins.sort! {|a,b| a.priority <=> b.priority }
   end
   
   def run(method, args=nil)
